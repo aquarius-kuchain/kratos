@@ -8,33 +8,26 @@ import (
 
 	chainCfg "github.com/KuChainNetwork/kuchain/chain/config"
 	"github.com/cosmos/cosmos-sdk/server"
-	"github.com/cosmos/cosmos-sdk/version"
-	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	cfg "github.com/tendermint/tendermint/config"
 	"github.com/tendermint/tendermint/libs/cli"
 	tmflags "github.com/tendermint/tendermint/libs/cli/flags"
 )
 
-func PersistentPreRunEFn(context *server.Context) func(*cobra.Command, []string) error {
-	return func(cmd *cobra.Command, args []string) error {
-		if cmd.Name() == version.Cmd.Name() {
-			return nil
-		}
+// SetLoggerToContext set logger to ctx
+func SetLoggerToContext(ctx *server.Context) error {
+	zapLogger := mkZapLogger(viper.GetBool(cli.TraceFlag))
 
-		zapLogger := mkZapLogger(viper.GetBool(cli.TraceFlag))
-
-		// process log level for cosmos-sdk
-		logLvCfg := viper.GetString("log_level")
-		logger, err := tmflags.ParseLogLevel(logLvCfg, NewLogger(zapLogger), cfg.DefaultLogLevel())
-		if err != nil {
-			return err
-		}
-
-		context.Logger = logger.With("module", "main")
-		context.Config = chainCfg.DefaultConfig()
-		return nil
+	// process log level for cosmos-sdk
+	logLvCfg := viper.GetString("log_level")
+	logger, err := tmflags.ParseLogLevel(logLvCfg, NewLogger(zapLogger), cfg.DefaultLogLevel())
+	if err != nil {
+		return err
 	}
+
+	ctx.Logger = logger.With("module", "main")
+	ctx.Config = chainCfg.DefaultConfig()
+	return nil
 }
 
 func mkZapLogger(isDebug bool) *zap.Logger {

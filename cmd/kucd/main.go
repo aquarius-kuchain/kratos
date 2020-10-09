@@ -4,10 +4,8 @@ import (
 	"encoding/json"
 	"io"
 
-	"github.com/KuChainNetwork/kuchain/x/asset"
-	"github.com/KuChainNetwork/kuchain/x/staking"
-
-	genutilcli "github.com/KuChainNetwork/kuchain/x/genutil/client/cli"
+	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client/debug"
@@ -15,10 +13,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/server"
 	"github.com/cosmos/cosmos-sdk/store"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-
-	//"github.com/KuChainNetwork/kuchain/x/staking"
-	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	abci "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/libs/cli"
 	"github.com/tendermint/tendermint/libs/log"
@@ -30,8 +24,10 @@ import (
 	chainCfg "github.com/KuChainNetwork/kuchain/chain/config"
 	"github.com/KuChainNetwork/kuchain/chain/constants"
 	"github.com/KuChainNetwork/kuchain/chain/types"
-	kuLog "github.com/KuChainNetwork/kuchain/utils/log"
+	"github.com/KuChainNetwork/kuchain/x/asset"
+	genutilcli "github.com/KuChainNetwork/kuchain/x/genutil/client/cli"
 	genTypes "github.com/KuChainNetwork/kuchain/x/genutil/types"
+	"github.com/KuChainNetwork/kuchain/x/staking"
 )
 
 const flagInvCheckPeriod = "inv-check-period"
@@ -49,7 +45,7 @@ func main() {
 	rootCmd := &cobra.Command{
 		Use:               "kucd",
 		Short:             "kuchain Daemon (server)",
-		PersistentPreRunE: kuLog.PersistentPreRunEFn(ctx),
+		PersistentPreRunE: PersistentPreRunEFn(ctx),
 	}
 
 	rootCmd.AddCommand(genutilcli.InitCmd(ctx, genCdc, app.ModuleBasics, app.DefaultNodeHome))

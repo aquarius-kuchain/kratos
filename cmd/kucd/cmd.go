@@ -5,9 +5,11 @@ import (
 	"fmt"
 
 	"github.com/KuChainNetwork/kuchain/chain/constants"
+	kuLog "github.com/KuChainNetwork/kuchain/utils/log"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/server"
+	"github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/version"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -114,4 +116,18 @@ against which this app has been compiled.
 	cmd.Flags().BoolP(flagJSONFormat, "j", false, "print version info by json")
 
 	return cmd
+}
+
+func PersistentPreRunEFn(context *server.Context) func(*cobra.Command, []string) error {
+	return func(cmd *cobra.Command, args []string) error {
+		if cmd.Name() == version.Cmd.Name() {
+			return nil
+		}
+
+		if err := kuLog.SetLoggerToContext(context); err != nil {
+			return errors.Wrapf(err, "apply logger error")
+		}
+
+		return nil
+	}
 }
