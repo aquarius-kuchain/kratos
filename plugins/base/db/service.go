@@ -14,7 +14,7 @@ type dbWork struct {
 	msg interface{}
 }
 
-func NewWork(msg interface{}) dbWork {
+func newWork(msg interface{}) dbWork {
 	return dbWork{msg: msg}
 }
 
@@ -83,8 +83,8 @@ func (db *DBService) Process(work *dbWork) error {
 	return nil
 }
 
-func (db *DBService) Emit(work dbWork) {
-	db.dbChan <- work
+func (db *DBService) Emit(msg interface{}) {
+	db.dbChan <- newWork(msg)
 }
 
 func (db *DBService) Stop() error {
