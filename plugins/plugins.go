@@ -1,10 +1,12 @@
 package plugins
 
 import (
-	chainTypes "github.com/KuChainNetwork/kuchain/chain/types"
-	dbHistory "github.com/KuChainNetwork/kuchain/plugins/db_history"
 	"github.com/KuChainNetwork/kuchain/plugins/test"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	chainTypes "github.com/KuChainNetwork/kuchain/chain/types"
+	eventDB "github.com/KuChainNetwork/kuchain/plugins/db_event_history"
+	dbHistory "github.com/KuChainNetwork/kuchain/plugins/db_history"
 )
 
 // TODO: use a goroutine
@@ -35,6 +37,8 @@ func initPlugin(ctx Context, cfg BaseCfg, plugins *Plugins) {
 		plugins.RegPlugin(ctx, test.NewTestPlugin(ctx, cfg))
 	case dbHistory.PluginName:
 		plugins.RegPlugin(ctx, dbHistory.New(ctx, cfg))
+	case eventDB.PluginName:
+		plugins.RegPlugin(ctx, eventDB.New(ctx, cfg))
 	}
 }
 
