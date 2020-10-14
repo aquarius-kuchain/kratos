@@ -1,4 +1,4 @@
-package config
+package db
 
 // DBCfg cfg for database connect
 type DBCfg struct {

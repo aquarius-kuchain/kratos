@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	chainTypes "github.com/KuChainNetwork/kuchain/chain/types"
-	"github.com/KuChainNetwork/kuchain/plugins/db_history/config"
+	"github.com/KuChainNetwork/kuchain/plugins/base/db"
 	"github.com/KuChainNetwork/kuchain/plugins/db_history/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tendermint/tendermint/libs/log"
@@ -15,13 +15,13 @@ import (
 type plugin struct {
 	logger log.Logger
 
-	cfg config.Cfg
-	db  *dbService
+	cfg db.Cfg
+	db  *db.DBService
 }
 
 func (t *plugin) Init(ctx types.Context) error {
 	t.logger.Info("plugin init", "name", types.PluginName)
-	t.db = NewDB(t.cfg, ctx.Logger().With("module", "his-database"))
+	t.db = db.NewDB(t.cfg, ctx.Logger().With("module", "his-database"))
 	return nil
 }
 
